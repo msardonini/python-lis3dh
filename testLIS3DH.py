@@ -16,12 +16,14 @@ def clickcallback(channel):
 
 
 if __name__ == '__main__':
-    sensor = LIS3DH(debug=True)
+    sensor = LIS3DH(debug=True, datarate=DATARATE_LOWPOWER_5KHZ)
     sensor.setRange(LIS3DH.RANGE_2G)
     sensor.setClick(LIS3DH.CLK_DOUBLE, 200, mycallback=clickcallback)
 
     # second accelerometer
     # s2 = LIS3DH(address=0x19, debug=True)
+
+    fd = open("data.csv","w") #will overwrite existing file
 
     print("Starting stream")
     while True:
@@ -32,7 +34,9 @@ if __name__ == '__main__':
 
         # raw values
         print("\rX: %.6f\tY: %.6f\tZ: %.6f" % (x, y, z))
-        sleep(0.1)
+        fd.write(("%.6f,%.6f,%.6f\n" % (x, y, z)))
+
+        sleep(0.0001)
 
     # click sensor if polling & not using interrupt
     #        click = sensor.getClick()
